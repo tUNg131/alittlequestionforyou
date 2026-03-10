@@ -60,7 +60,7 @@
       backdrop-filter: blur(14px);
       border-radius: 24px;
       padding: 2.5rem 2.8rem 2.2rem;
-      max-width: 440px;
+      max-width: 460px;
       width: 100%;
       text-align: center;
       box-shadow:
@@ -70,6 +70,14 @@
       animation: cardAppear 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
       opacity: 0;
       transform: scale(0.8) translateY(30px);
+      transition: transform 0.25s ease, box-shadow 0.25s ease;
+    }
+
+    .card:hover {
+      transform: translateY(-4px);
+      box-shadow:
+        0 12px 36px rgba(180, 120, 120, 0.14),
+        0 2px 8px rgba(0, 0, 0, 0.05);
     }
 
     @keyframes cardAppear {
@@ -91,14 +99,15 @@
     .card-deco span {
       display: inline-block;
       animation: tulipSway 3s ease-in-out infinite;
+      transform-origin: bottom center;
     }
 
     .card-deco span:nth-child(2) { animation-delay: 0.3s; }
     .card-deco span:nth-child(3) { animation-delay: 0.6s; }
 
     @keyframes tulipSway {
-      0%, 100% { transform: rotate(-4deg); }
-      50% { transform: rotate(4deg); }
+      0%, 100% { transform: rotate(-4deg) translateY(0); }
+      50% { transform: rotate(4deg) translateY(-3px); }
     }
 
     .greeting {
@@ -113,18 +122,21 @@
       color: #8b5e5e;
       font-weight: 700;
       line-height: 1.55;
-      margin-bottom: 2rem;
+      margin-bottom: 0.7rem;
     }
 
-    @media (max-width: 480px) {
-      .card {
-        padding: 2rem 1.6rem 1.8rem;
-        border-radius: 20px;
-      }
-      .card-deco { font-size: 2.2rem; }
-      .greeting { font-size: 0.95rem; }
-      .question { font-size: 1.2rem; margin-bottom: 1.6rem; }
-      .btn { padding: 0.75rem 2rem; font-size: 1rem; }
+    .sub-note {
+      font-size: 0.9rem;
+      color: #b78a8a;
+      font-style: italic;
+      margin-bottom: 1.8rem;
+    }
+
+    .mobile-note {
+      display: none;
+      font-size: 0.82rem;
+      color: #bf8f9b;
+      margin-top: 1rem;
     }
 
     .buttons {
@@ -132,6 +144,7 @@
       gap: 1.2rem;
       justify-content: center;
       align-items: center;
+      flex-wrap: wrap;
     }
 
     .btn {
@@ -236,11 +249,6 @@
       }
     }
 
-    .celeb-icon {
-      font-size: 3rem;
-      margin-bottom: 0.8rem;
-    }
-
     .celeb-title {
       font-size: 2.3rem;
       font-weight: 700;
@@ -249,23 +257,15 @@
     }
 
     .celeb-subtitle {
-      font-size: 1.12rem;
+      font-size: 1.05rem;
       color: #b07070;
       font-weight: 600;
-      margin-bottom: 0.55rem;
+      margin-bottom: 0.3rem;
     }
 
     .celeb-note {
-      font-size: 0.92rem;
+      font-size: 0.9rem;
       color: #b78a8a;
-      letter-spacing: 0.2px;
-      margin-bottom: 0.9rem;
-    }
-
-    .celeb-flowers {
-      font-size: 1.4rem;
-      letter-spacing: 0.45rem;
-      opacity: 0.9;
     }
 
     .celeb-sparkles {
@@ -315,14 +315,30 @@
         opacity: 0;
       }
     }
+
+    @media (max-width: 480px) {
+      .card {
+        padding: 2rem 1.6rem 1.8rem;
+        border-radius: 20px;
+      }
+
+      .card:hover {
+        transform: none;
+      }
+
+      .card-deco { font-size: 2.2rem; }
+      .greeting { font-size: 0.95rem; }
+      .question { font-size: 1.2rem; margin-bottom: 0.65rem; }
+      .sub-note { font-size: 0.82rem; margin-bottom: 1.5rem; }
+      .btn { padding: 0.75rem 2rem; font-size: 1rem; }
+      .mobile-note { display: block; }
+    }
   </style>
 </head>
 <body>
 
-  <!-- Floating petals background -->
   <div id="petals-container"></div>
 
-  <!-- Main question content -->
   <div id="main-content">
     <div class="card">
       <div class="card-deco">
@@ -332,14 +348,17 @@
       </div>
       <p class="greeting">I have a very serious question...</p>
       <p class="question">Would you like to get coffee with me this week? ☕</p>
+      <p class="sub-note">This is all very professional.</p>
+
       <div class="buttons">
         <button class="btn btn-yes" id="btn-yes">Yes!</button>
         <button class="btn btn-no" id="btn-no">No</button>
       </div>
+
+      <p class="mobile-note">Psst... this looks even cuter on a laptop 🌷</p>
     </div>
   </div>
 
-  <!-- Celebration screen -->
   <div id="celebration">
     <div class="celeb-content">
       <div class="celeb-sparkles">
@@ -349,7 +368,8 @@
         <span>✦</span>
       </div>
       <h1 class="celeb-title">Yay 🌷</h1>
-      <p class="celeb-subtitle">Decision recorded</p>
+      <p class="celeb-subtitle">Choice received.</p>
+      <p class="sub-note">This website worked...</p>
     </div>
   </div>
 
@@ -361,8 +381,8 @@
       const main = document.getElementById('main-content');
       const petals = document.getElementById('petals-container');
 
-      // --- Floating petals ---
       const petalEmojis = ['🌸', '🌷', '🌸', '🌷'];
+
       function spawnPetal() {
         const el = document.createElement('div');
         el.classList.add('petal');
@@ -374,10 +394,10 @@
         petals.appendChild(el);
         el.addEventListener('animationend', () => el.remove());
       }
+
       for (let i = 0; i < 8; i++) setTimeout(spawnPetal, i * 500);
       setInterval(spawnPetal, 2500);
 
-      // --- Runaway No button ---
       const btnNo = document.getElementById('btn-no');
       let runawayCount = 0;
       let noPlaceholder = null;
@@ -389,6 +409,7 @@
           'Nope!', 'Try again!', 'Not here!', 'Catch me!',
           'Hehe!', 'Too slow!', 'Nice try!', 'Over here!'
         ];
+
         if (runawayCount > 2) {
           btnNo.textContent = taunts[Math.floor(Math.random() * taunts.length)];
         }
@@ -429,7 +450,6 @@
         btnNo.addEventListener('mouseover', moveNoButton);
       }
 
-      // --- Yes button celebration ---
       const btnYes = document.getElementById('btn-yes');
       const celebration = document.getElementById('celebration');
 
@@ -441,7 +461,6 @@
         launchTulipBurst();
       });
 
-      // --- Gentle tulip burst ---
       function launchTulipBurst() {
         const tulips = ['🌷', '🌷', '🌸', '🌷'];
 
